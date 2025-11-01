@@ -1,0 +1,340 @@
+:root {
+  --bg: #0f1115;
+  --elev: #141823;
+  --elev-2: #1a2030;
+  --muted: #8b98a5;
+  --text: #e6edf3;
+  --accent: #5aa6ff;
+  --accent-2: #7cdbb8;
+  --border: #22304a;
+  --danger: #ff6b6b;
+  --good: #57d39b;
+  --warn: #ffc061;
+  --shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 13px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+.hdr {
+  position: sticky; top: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px;
+  background: linear-gradient(180deg, #121623 0%, #0f1115 100%);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; letter-spacing: .3px; }
+.brand .dot { width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 0 12px var(--accent); }
+
+.hdr-actions { display: inline-flex; gap: 6px; }
+.icon-btn {
+  appearance: none; border: 1px solid var(--border); background: var(--elev);
+  color: var(--text); padding: 6px 8px; border-radius: 8px; cursor: pointer;
+}
+.icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.layout {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  grid-template-columns: 1fr;
+  height: calc(100vh - 46px);
+}
+
+.section-title {
+  font-size: 12px; color: var(--muted); text-transform: uppercase;
+  letter-spacing: .6px; padding: 8px 12px;
+}
+
+.groups {
+  background: var(--elev);
+  border-bottom: 1px solid var(--border);
+}
+.groups-list {
+  display: grid; gap: 6px; padding: 8px 8px 12px;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+}
+
+.group-item {
+  display: grid; gap: 4px; text-align: left;
+  padding: 10px; border-radius: 10px; border: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--elev) 0%, var(--elev-2) 100%);
+  color: var(--text); cursor: pointer;
+  transition: transform .08s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.group-item:hover { transform: translateY(-1px); border-color: var(--accent); box-shadow: var(--shadow); }
+.group-item.active { border-color: var(--good); }
+.group-line1 { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.group-label { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.group-count {
+  font-size: 12px; padding: 2px 6px; border-radius: 999px;
+  background: rgba(122, 168, 255, 0.12); color: var(--accent);
+}
+.group-line2 { font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.details {
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, #10131b 0%, #0f1115 100%);
+  padding-bottom: 8px;
+}
+.summary-card, .connections-card, .suggestions-card {
+  margin: 8px 12px; padding: 10px; border-radius: 10px;
+  background: var(--elev); border: 1px solid var(--border);
+}
+.sub-title { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+.summary-text, .connections-text { color: var(--text); white-space: pre-wrap; }
+
+.suggestions-list { display: grid; gap: 6px; }
+.suggestion-btn {
+  appearance: none; border: 1px solid var(--border); background: var(--elev-2);
+  color: var(--text); padding: 8px 10px; border-radius: 8px; text-align: left; cursor: pointer;
+}
+.suggestion-btn:hover { border-color: var(--accent-2); color: var(--accent-2); }
+
+.chat {
+  display: grid; grid-template-rows: auto 1fr auto auto; gap: 6px;
+  min-height: 180px; padding-bottom: 8px;
+}
+.chat-history {
+  margin: 0 12px; padding: 8px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--elev); min-height: 88px; max-height: 220px; overflow: auto;
+  display: grid; gap: 8px;
+}
+.msg { display: inline-block; padding: 8px 10px; border-radius: 10px; max-width: 92%; white-space: pre-wrap; }
+.msg.user { background: rgba(90, 166, 255, .12); border: 1px solid rgba(90,166,255,.25); align-self: end; justify-self: end; }
+.msg.assistant { background: rgba(124, 219, 184, .12); border: 1px solid rgba(124,219,184,.25); align-self: start; justify-self: start; }
+
+.chat-input {
+  display: grid; grid-template-columns: 1fr auto auto; gap: 6px; padding: 0 12px;
+}
+.chat-input input {
+  padding: 10px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--elev); color: var(--text); outline: none;
+}
+.chat-input input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(90,166,255,.2); }
+.mic-btn, .send-btn {
+  appearance: none; border: 1px solid var(--border); background: var(--elev);
+  color: var(--text); padding: 8px 12px; border-radius: 10px; cursor: pointer; min-width: 40px;
+}
+.mic-btn.recording { border-color: var(--danger); color: var(--danger); box-shadow: 0 0 0 2px rgba(255,107,107,.2); }
+
+.status { color: var(--muted); font-size: 12px; padding: 0 12px 8px; }
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f7f9fc; --elev: #ffffff; --elev-2: #f1f5ff;
+    --text: #0a0c10; --muted: #5b6773; --border: #e6ebf2;
+    --accent: #2d6cdf; --accent-2: #0ea37a;
+  }
+}
+/* Material-inspired Google theme overrides and layout fixes */
+
+/* Design tokens */
+:root {
+  --g-blue: #1a73e8;
+  --g-red: #DB4437;
+  --g-yellow: #F4B400;
+  --g-green: #0F9D58;
+  --surface: #ffffff;
+  --surface-variant: #f1f3f4;
+  --on-surface: #202124;
+  --on-surface-muted: #5f6368;
+  --outline: #dadce0;
+  --shadow: 0 2px 6px rgba(60,64,67,0.2), 0 1px 2px rgba(60,64,67,0.1);
+}
+
+html, body { height:100%; }
+body {
+  height: 100vh;
+  margin:0;
+  background: var(--surface);
+  color: var(--on-surface);
+  font: 14px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Root column layout to ensure full-height usage */
+.panel-root { min-height:100%; display:flex; flex-direction:column; }
+
+/* Make main layout and chat area consume all remaining vertical space */
+.layout {
+  display:flex;
+  flex-direction:column;
+  flex: 1 1 auto;
+  min-height: 0; /* allow children to scroll */
+}
+
+/* Actions toolbar (Google Material style) */
+.toolbar {
+  position: sticky; top: 0; z-index: 10;
+  display:flex; align-items:center; gap:8px;
+  padding:10px;
+  background: var(--surface-variant);
+  border-bottom: 1px solid var(--outline);
+}
+
+/* Status line directly under toolbar */
+#chatStatus {
+  padding: 6px 10px;
+  color: var(--on-surface-muted);
+  min-height: 20px;
+}
+
+/* Chat column: history expands and scrolls; form pinned at bottom */
+.chat {
+  display:flex;
+  flex-direction:column;
+  flex: 1 1 auto;
+  min-height: 0; /* critical for flex scrolling */
+}
+
+/* History scroll area */
+#chatHistory {
+  flex:1 1 auto;
+  overflow-y:auto;
+  padding: 10px;
+  scroll-behavior:smooth;
+  background: var(--surface);
+  /* override legacy cap */
+  max-height: none !important;
+  min-height: 0;
+}
+
+/* Input form pinned at bottom */
+#chatForm {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px;
+  border-top:1px solid var(--outline);
+  background: var(--surface);
+}
+
+#chatText {
+  flex:1;
+  border:1px solid var(--outline);
+  border-radius: 24px;
+  padding:10px 14px;
+  outline:none;
+  background:#fff;
+  color: var(--on-surface);
+}
+
+#chatText:focus {
+  border-color: var(--g-blue);
+  box-shadow: 0 0 0 3px rgba(26,115,232,0.15);
+}
+
+/* Messages */
+.msg {
+  padding:10px 12px;
+  margin:6px 0;
+  border-radius:12px;
+  box-shadow: var(--shadow);
+  background:#fff;
+  color: var(--on-surface);
+}
+
+.msg.user { background:#e8f0fe; }        /* blue-tinted bubble */
+.msg.assistant { background:#fff; }
+
+/* Material buttons */
+.md-btn {
+  position: relative;
+  overflow: hidden;
+  appearance: none;
+  border:1px solid var(--outline);
+  background: #fff;
+  color: var(--on-surface);
+  padding:8px 12px;
+  border-radius: 20px;
+  cursor:pointer;
+  box-shadow: var(--shadow);
+  transition: transform 0.08s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  user-select: none;
+}
+
+.md-btn.primary {
+  background: var(--g-blue);
+  color:#fff;
+  border-color: transparent;
+}
+
+.md-btn:hover {
+  box-shadow: 0 3px 8px rgba(60,64,67,0.24), 0 1px 3px rgba(60,64,67,0.16);
+}
+
+.md-btn:active { transform: scale(0.98); }
+
+.md-btn:focus-visible {
+  outline: 3px solid rgba(26,115,232,0.35);
+  outline-offset: 2px;
+}
+
+/* Ripple */
+.md-ripple {
+  position:absolute;
+  border-radius:50%;
+  transform: scale(0);
+  background: rgba(255,255,255,0.35);
+  pointer-events:none;
+  width: 16px;
+  height: 16px;
+  opacity: 0;
+  animation: ripple 500ms ease-out forwards;
+}
+
+.md-btn:not(.primary) .md-ripple { background: rgba(26,115,232,0.2); }
+
+@keyframes ripple {
+  to { transform: scale(16); opacity: 0; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .md-btn, .md-ripple { transition: none !important; animation: none !important; }
+}
+
+/* Scrollbar (Chromium) */
+#chatHistory::-webkit-scrollbar { width: 10px; }
+#chatHistory::-webkit-scrollbar-thumb { background: var(--outline); border-radius: 8px; }
+#chatHistory::-webkit-scrollbar-thumb:hover { background: #c9cccf; }
+
+/* Mic recording state override (ensure red ring even if .primary) */
+.md-btn.mic-btn.recording {
+  background:#fff;
+  color: var(--g-red);
+  border-color: var(--g-red);
+  box-shadow: 0 0 0 3px rgba(219,68,55,0.2);
+}
+
+/* Optional small utility for future use */
+.google-chip {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:4px 8px; border-radius:16px; border:1px solid var(--outline);
+  background: var(--surface-variant); color: var(--on-surface);
+}
+/* ===== Material overrides (append-last to win cascade over legacy rules) ===== */
+:root {
+  /* Map legacy tokens to Material ones so old rules resolve consistently */
+  --bg: var(--surface);
+  --text: var(--on-surface);
+  --border: var(--outline);
+}
+
+/* Ensure the app uses Material surface/text regardless of earlier body rules */
+.panel-root { background: var(--surface); color: var(--on-surface); }
+
+/* Force flex-based column layout for full-height chat area */
+.layout { display:flex !important; flex-direction:column; flex:1 1 auto; min-height:0; height:auto !important; }
+.chat { display:flex !important; flex-direction:column; flex:1 1 auto; min-height:0; }
+
+/* Remove legacy chat-history vertical cap */
+#chatHistory { max-height: none !important; }
+
+/* Harmonize header with Material surface */
+.hdr { background: var(--surface) !important; border-bottom: 1px solid var(--outline) !important; color: var(--on-surface) !important; }

@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "CLARITY AI",
+  "description": "Auto-group tabs by intent, summarize, connect, and chat with local AI first, with Firebase Gemini Flash fallback.",
+  "version": "0.1.0",
+  "minimum_chrome_version": "120",
+  "permissions": [
+    "tabs",
+    "tabGroups",
+    "storage",
+    "activeTab",
+    "scripting",
+    "sidePanel",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "src/background/service-worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "sidepanel/mic-permission.html",
+    "default_title": "CLARITY AI"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/panel.html"
+  },
+  "commands": {
+    "toggle-side-panel": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y"
+      },
+      "description": "Toggle side panel"
+    },
+    "move-group-to-new-window": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+M"
+      },
+      "description": "Move selected group to a new window"
+    }
+  }
+}

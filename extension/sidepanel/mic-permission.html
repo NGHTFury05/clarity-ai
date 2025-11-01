@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CLARITY AI • Microphone</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { margin: 0; font: 13px/1.4 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 10px 12px; min-width: 260px; }
+    #status { }
+    .ok { color: #0a7a25; }
+    .err { color: #b00020; }
+    small { opacity: .8; display:block; margin-top:6px; }
+  </style>
+</head>
+<body>
+  <div id="status">Requesting microphone access…</div>
+  <small id="hint"></small>
+  <script src="mic-permission.js" defer></script>
+</body>
+</html>

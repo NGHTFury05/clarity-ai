@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs20",
+    "region": "asia-south1",
+    "ignore": [
+      "node_modules",
+      ".git",
+      ".github",
+      ".DS_Store"
+    ]
+  }
+}

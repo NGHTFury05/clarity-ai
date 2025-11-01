@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>CLARITY AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="./panel.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="panelRoot" class="panel-root">
+      <header class="hdr">
+        <div class="brand">
+          <div class="dot"></div>
+          <span>CLARITY AI</span>
+        </div>
+        <div class="hdr-actions"></div>
+      </header>
+
+      <div class="toolbar" role="toolbar" aria-label="Actions">
+        <button id="groupToggleBtn" class="md-btn" title="Group open tabs by intent">Group</button>
+        <button id="addContextBtn" class="md-btn" title="Add the active tab’s summary to chat context">Add Tab Context</button>
+        <button id="micBtn" type="button" class="md-btn primary mic-btn" title="Voice input (will ask permission)">🎤</button>
+      </div>
+
+      <div id="chatStatus" class="status" aria-live="polite"></div>
+
+      <main class="layout">
+        <section class="chat" aria-label="Chat">
+          <div id="chatHistory" class="chat-history" aria-live="polite"></div>
+
+          <form id="chatForm" class="chat-form" autocomplete="off">
+            <input id="chatText" type="text" placeholder="Ask anything about what you're working on..." aria-label="Chat input" />
+            <button id="sendBtn" type="submit" class="md-btn primary send-btn" title="Send">Send</button>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./panel.js?v=2"></script>
+  </body>
+</html>

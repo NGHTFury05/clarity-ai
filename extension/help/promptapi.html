@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>CLARITY AI · Chrome Prompt API (Gemini Nano) Setup Guide</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --bg:#0f1115; --card:#161b26; --text:#e6edf3; --muted:#8b98a5; --acc:#5aa6ff; --ok:#57d39b; --warn:#ffc061; --bad:#ff6b6b; --br:#22304a;}
+    body { margin:0; font:14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background:var(--bg); color:var(--text); }
+    header { padding:14px 16px; border-bottom:1px solid var(--br); background:linear-gradient(180deg, #121623 0%, #0f1115 100%); }
+    header h1 { margin:0; font-size:16px; letter-spacing:.3px; }
+    main { padding:18px; display:grid; gap:14px; max-width:940px; margin:0 auto; }
+    .card { background:var(--card); border:1px solid var(--br); border-radius:10px; padding:14px 16px; }
+    h2 { margin:0 0 8px; font-size:15px; }
+    code, pre { background:#0d0f14; color:#e2f1ff; border:1px solid #1f2a3f; border-radius:6px; }
+    code { padding:0 4px; }
+    pre { padding:10px; overflow:auto; }
+    .muted { color:var(--muted); }
+    .ok { color:var(--ok); }
+    .warn { color:var(--warn); }
+    .bad { color:var(--bad); }
+    a { color:var(--acc); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    ul, ol { margin:6px 0 0 18px; }
+    .kbd { display:inline-block; padding:2px 6px; border:1px solid var(--br); border-radius:6px; background:#0d0f14; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Use Chrome’s built‑in AI (Gemini Nano) with Prompt API</h1>
+  </header>
+  <main>
+    <div class="card">
+      <h2>Overview</h2>
+      <p>
+        This guide shows how CLARITY AI uses Chrome’s built‑in Prompt API (Gemini Nano) locally, and how you can enable it on your device.
+        CLARITY AI is an MV3 extension that prefers on‑device Prompt API and falls back gracefully when unavailable.
+      </p>
+      <p class="muted">Reference draft: Prompt API explainer (WICG) and Chrome Built‑in AI docs.</p>
+    </div>
+
+    <div class="card">
+      <h2>1) Extension permissions</h2>
+      <p>Add the <code>"ai"</code> permission to your manifest (already configured in this build):</p>
+      <pre>{
+  "manifest_version": 3,
+  "name": "CLARITY AI",
+  "permissions": [
+    "ai",
+    "tabs",
+    "tabGroups",
+    "storage",
+    "activeTab",
+    "scripting",
+    "sidePanel",
+    "contextMenus"
+  ],
+  ...
+}</pre>
+      <p class="muted">File: manifest.json is at <code>clarity-ai/extension/manifest.json</code></p>
+    </div>
+
+    <div class="card">
+      <h2>2) Enable required Chrome flags (one‑time, per device)</h2>
+      <ol>
+        <li>Open <span class="kbd">chrome://flags</span></li>
+        <li>Enable:
+          <ul>
+            <li><strong>#prompt-api-for-gemini-nano</strong></li>
+            <li><strong>#optimization-guide-on-device-model</strong></li>
+          </ul>
+        </li>
+        <li>Restart Chrome</li>
+        <li>Open <span class="kbd">chrome://components</span> and ensure “Optimization Guide On Device Model” downloads/updates.</li>
+      </ol>
+      <p class="warn">Note: Download requires sufficient disk/RAM/VRAM. Availability varies by platform & Chrome version.</p>
+    </div>
+
+    <div class="card">
+      <h2>3) Check Prompt API availability</h2>
+      <p>In the Side Panel chat, CLARITY AI will detect Prompt API automatically. You can also check via DevTools console:</p>
+      <pre>// Preferred: global LanguageModel API (window context)
+await LanguageModel?.availability?.({
+  expectedInputs: [{ type: "text", languages: ["en"] }],
+  expectedOutputs: [{ type: "text", languages: ["en"] }]
+}); // "unavailable" | "downloadable" | "downloading" | "available"</pre>
+      <p>If you see “downloadable” or “downloading”, wait until model download completes, then try again.</p>
+    </div>
+
+    <div class="card">
+      <h2>4) Minimal usage pattern (Prompt API)</h2>
+      <pre>// Create a session and prompt it
+const session = await LanguageModel.create({
+  temperature: 0.2,
+  topK: 32,
+  expectedInputs: [{ type: "text", languages: ["en"] }],
+  expectedOutputs: [{ type: "text", languages: ["en"] }],
+  monitor(m) {
+    m.addEventListener("downloadprogress", e =>
+      console.log("download", Math.round((e.loaded||0)*100), "%"));
+  }
+});
+
+const result = await session.prompt("Write me a one-line summary of React Suspense.");
+console.log(result); // string
+// When done:
+session.destroy?.();</pre>
+      <p>CLARITY AI wraps this API and uses it in chat and “Summarize open tabs / Suggest next steps”.</p>
+    </div>
+
+    <div class="card">
+      <h2>5) Audio input (voice)</h2>
+      <p>On Chrome stable, Prompt API multimodal audio input may not be exposed. CLARITY AI uses:</p>
+      <ul>
+        <li><strong>Mic permission</strong> via <code>navigator.mediaDevices.getUserMedia({ audio: true })</code> (must be triggered by a user click)</li>
+        <li><strong>Web Speech API</strong> for speech‑to‑text transcription</li>
+      </ul>
+      <p>Click the “Enable microphone” button in the side panel first (user gesture), then click 🎤 to dictate.</p>
+      <p class="warn">Browsers block mic prompts at startup without a user gesture. This is expected.</p>
+    </div>
+
+    <div class="card">
+      <h2>6) Opening the Side Panel (policy constraints)</h2>
+      <ul>
+        <li>Toolbar action click (user gesture) opens the panel.</li>
+        <li>Right‑click context menu → “Open CLARITY AI side panel”.</li>
+        <li>Keyboard shortcut can “prepare” but not open the panel automatically; click the action to open.</li>
+      </ul>
+      <p class="muted">These restrictions are enforced by Chrome for UX consistency and security.</p>
+    </div>
+
+    <div class="card">
+      <h2>7) “Google Writer” suggestions</h2>
+      <p>CLARITY AI currently generates “Suggest next steps” using the local Prompt API (on‑device). If you want cloud‑backed “Writer”:</p>
+      <ul>
+        <li>Provide your API endpoint and key (e.g., Google AI Studio/Gemini), and we’ll add a key‑path in the code that only sends <em>titles + hosts</em> (no full URLs).</li>
+        <li>Alternatively, experimental Writing Assistance APIs exist as proposals/flags. When stabilized, we can switch the suggestion path to them.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>8) Common statuses and resolutions</h2>
+      <ul>
+        <li><strong>unavailable</strong>: Update Chrome, enable flags, confirm platform support.</li>
+        <li><strong>downloadable/downloading</strong>: Wait for model download in <span class="kbd">chrome://components</span>.</li>
+        <li><strong>available</strong>: You’re good. CLARITY AI will use the local model.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>9) Where CLARITY AI uses the Prompt API</h2>
+      <ul>
+        <li>Chat replies: <code>chatReply()</code> in <code>src/shared/ai-client.js</code></li>
+        <li>Summarize open tabs: <code>summarizeOpenTabs()</code> in <code>src/shared/ai-client.js</code></li>
+        <li>Suggest next steps: <code>suggestNextSteps()</code> in <code>src/shared/ai-client.js</code></li>
+      </ul>
+      <p class="muted">If Prompt API is not detected, these methods fall back to fast heuristics and do not call cloud.</p>
+    </div>
+
+    <div class="card">
+      <h2>10) Privacy</h2>
+      <ul>
+        <li>MVP sends no page content to the model—only tab titles and hostnames.</li>
+        <li>No telemetry or analytics in this build.</li>
+        <li>Cloud suggestion path can be added with an opt‑in key and redacted payloads (titles/hosts only).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Quick checks</h2>
+      <ul>
+        <li>Prompt API detection in side panel: you’ll see a message if it’s not detected.</li>
+        <li>DevTools console: run the availability snippet above.</li>
+        <li>If stuck on “downloadable/downloading”: wait for the model to complete in <span class="kbd">chrome://components</span>.</li>
+      </ul>
+    </div>
+  </main>
+</body>
+</html>
